@@ -63,7 +63,7 @@ class GatewayClient(
             score = json.optInt("score"),
             verdict = Verdict.from(json.optString("verdict", "grey")),
             rejectionCode = json.optString("rejectionCode").takeIf { it != "null" && it.isNotEmpty() },
-            redirectUrl = result.redirectUrl,
+            redirectUrl = json.optString("targetUrl").takeIf { it.isNotEmpty() } ?: result.redirectUrl,
             details = details,
         )
     }
