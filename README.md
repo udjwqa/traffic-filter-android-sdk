@@ -399,6 +399,7 @@ lifecycleScope.launch {
 
 ```
 X-Client-Secret:    секретный ключ из конфига
+X-Package-Name:     com.example.app       (из AndroidManifest, автоматически)
 User-Agent:         Mozilla/5.0 (Linux; Android 14; Samsung Galaxy S23 ...)
 Accept-Language:    ru-RU,ru;q=0.9,en;q=0.8
 X-Device-Model:     Samsung Galaxy S23    (Build.MODEL)
@@ -408,7 +409,7 @@ X-OS-Version:       Android 14            (Build.VERSION.RELEASE)
 X-GPU-Renderer:     Adreno (TM) 740       (OpenGL ES)
 ```
 
-Сервер анализирует эти заголовки и возвращает скоринг.
+`X-Package-Name` — ключевой заголовок. По нему сервер определяет какое приложение стучится и использует его URLs, сертификат и GCP-ключ.
 
 ### Play Integrity (3 запроса)
 
@@ -416,6 +417,7 @@ X-GPU-Renderer:     Adreno (TM) 740       (OpenGL ES)
 1. GET  /api/integrity/nonce          → получить одноразовый токен
 2. Google Play Integrity API          → получить integrity token (на стороне Google)
 3. POST /api/integrity/verify         → отправить токен на верификацию
+   Headers: X-Package-Name
    Body: { "integrityToken": "...", "nonce": "..." }
 ```
 
@@ -628,4 +630,4 @@ TrafficFilter.init(this, FilterConfig(
 
 ---
 
-*v1.0.0 | Traffic Filter SDK*
+*v1.1.0 | Traffic Filter SDK*
