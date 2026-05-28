@@ -9,6 +9,8 @@ import javax.microedition.khronos.egl.EGLContext
 
 object DeviceInfo {
 
+    fun getPackageName(context: Context): String = context.packageName
+
     fun getUserAgent(): String {
         return "Mozilla/5.0 (Linux; Android ${Build.VERSION.RELEASE}; " +
                 "${Build.MODEL} Build/${Build.DISPLAY}) AppleWebKit/537.36 " +

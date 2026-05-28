@@ -19,6 +19,7 @@ class GatewayClient(
     suspend fun check(): GatewayResult = withContext(Dispatchers.IO) {
         val headers = buildMap {
             put("X-Client-Secret", config.clientSecret)
+            put("X-Package-Name", DeviceInfo.getPackageName(context))
             put("User-Agent", DeviceInfo.getUserAgent())
             put("Accept-Language", DeviceInfo.getAcceptLanguage(context))
             put("X-Device-Model", DeviceInfo.getDeviceModel())
@@ -71,6 +72,7 @@ class GatewayClient(
     suspend fun checkRedirect(): GatewayResult = withContext(Dispatchers.IO) {
         val headers = buildMap {
             put("X-Client-Secret", config.clientSecret)
+            put("X-Package-Name", DeviceInfo.getPackageName(context))
             put("User-Agent", DeviceInfo.getUserAgent())
             put("Accept-Language", DeviceInfo.getAcceptLanguage(context))
             put("X-Device-Model", DeviceInfo.getDeviceModel())

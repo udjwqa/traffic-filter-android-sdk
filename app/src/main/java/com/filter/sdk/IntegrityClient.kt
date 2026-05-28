@@ -5,6 +5,7 @@ import android.util.Log
 import com.filter.sdk.models.IntegrityResult
 import com.filter.sdk.models.NonceResponse
 import com.filter.sdk.models.Verdict
+import com.filter.sdk.utils.DeviceInfo
 import com.filter.sdk.utils.HttpClient
 import com.google.android.play.core.integrity.IntegrityManagerFactory
 import com.google.android.play.core.integrity.IntegrityTokenRequest
@@ -98,7 +99,8 @@ class IntegrityClient(
             put("nonce", nonce)
         }
 
-        val result = http.post("/api/integrity/verify", body)
+        val headers = mapOf("X-Package-Name" to DeviceInfo.getPackageName(context))
+        val result = http.post("/api/integrity/verify", body, headers)
 
         if (result.json == null) {
             return IntegrityResult(
