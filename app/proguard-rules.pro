@@ -3,14 +3,10 @@
 -dontwarn okio.**
 -keep class okhttp3.** { *; }
 
-# Play Integrity
+# Play Core
 -keep class com.google.android.play.core.integrity.** { *; }
 
-# SDK models
--keep class com.filter.sdk.models.** { *; }
--keep class com.filter.sdk.WebViewTracker$TrackerBridge { *; }
-
-# WebView JS interface
+# WebView JS interface (only keep annotated methods)
 -keepclassmembers class * {
     @android.webkit.JavascriptInterface <methods>;
 }

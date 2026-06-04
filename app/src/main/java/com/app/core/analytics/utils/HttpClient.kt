@@ -1,6 +1,6 @@
-package com.filter.sdk.utils
+package com.app.core.analytics.utils
 
-import com.filter.sdk.FilterConfig
+import com.app.core.analytics.AnalyticsConfig
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -8,7 +8,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
-class HttpClient(private val config: FilterConfig) {
+class HttpClient(private val config: AnalyticsConfig) {
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(config.connectTimeoutMs, TimeUnit.MILLISECONDS)
@@ -19,14 +19,14 @@ class HttpClient(private val config: FilterConfig) {
     private val jsonType = "application/json; charset=utf-8".toMediaType()
 
     fun get(path: String, extraHeaders: Map<String, String> = emptyMap()): HttpResult {
-        val url = "${config.serverUrl}$path"
+        val url = "${config.endpoint}$path"
         val builder = Request.Builder().url(url).get()
         extraHeaders.forEach { (k, v) -> builder.addHeader(k, v) }
         return execute(builder.build())
     }
 
     fun post(path: String, body: JSONObject, extraHeaders: Map<String, String> = emptyMap()): HttpResult {
-        val url = "${config.serverUrl}$path"
+        val url = "${config.endpoint}$path"
         val requestBody = body.toString().toRequestBody(jsonType)
         val builder = Request.Builder().url(url).post(requestBody)
         extraHeaders.forEach { (k, v) -> builder.addHeader(k, v) }
@@ -40,22 +40,9 @@ class HttpClient(private val config: FilterConfig) {
             val json = if (bodyStr.startsWith("{")) {
                 try { JSONObject(bodyStr) } catch (_: Exception) { null }
             } else null
-
-            HttpResult(
-                code = response.code,
-                body = bodyStr,
-                json = json,
-                redirectUrl = response.header("Location"),
-                success = response.isSuccessful || response.isRedirect,
-            )
+            HttpResult(response.code, bodyStr, json, response.header("Location"), response.isSuccessful || response.isRedirect)
         } catch (e: Exception) {
-            HttpResult(
-                code = -1,
-                body = e.message ?: "Unknown error",
-                json = null,
-                redirectUrl = null,
-                success = false,
-            )
+            HttpResult(-1, e.message ?: "Unknown error", null, null, false)
         }
     }
 }
